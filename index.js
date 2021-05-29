@@ -20,13 +20,9 @@ app.route('/reset').get((req, res)=>{
     query+= "CREATE TABLE content (";
     query+= "	id serial primary key not null,";
     query+= "	descricao varchar(100),";
-    query+= "	sinopse varchar(200),";
     query+= "	dataPublicacao timestamp,";
     query+= "	diaLancamento int,";
-    query+= "	categoria int,";
-    query+= "	classificacao int,";
-    query+= "	formato int,";
-    query+= "	fkUsuario int);";
+    query+= "	categoria int);";    
 
 
     query+= "DROP TABLE IF EXISTS app_user;";
@@ -47,9 +43,10 @@ app.route('/reset').get((req, res)=>{
 });
 
 app.route('/conteudos/adicionar').post((req, res)=>{
-    let qry = "INSERT INTO content (descricao, dataPublicacao, diaLancamento, categoria, classificacao, formato, fkUsuario) VALUES ";
-    qry += "($1, $2, $3, $4, $5, $5, $6, $7)";
-    pool.query(qry, [req.body.descricao, req.body.dataPublicacao, req.body.diaLancamento, req.body.categoria, req.body.classificacao, req.body.formato,req.body.fkUsuario], (err, dbres) => {
+    console.log('BODY:' + req.body);
+    let qry = "INSERT INTO content (descricao, dataPublicacao, categoria, diaLancamento) VALUES ";
+    qry += "($1, $2, $3, $4)";    
+    pool.query(qry, [req.body.descricao, req.body.dataPublicacao, req.body.categoria, req.body.diaLancamento], (err, dbres) => {
         if (err) {
             res.status(500).send(err);        
         } else {
