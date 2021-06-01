@@ -42,8 +42,9 @@ app.route('/reset').get((req, res)=>{
 
 app.route('/conteudos/adicionar').post((req, res)=>{
     console.log('BODY:' + req.body);
-    let qry = "INSERT INTO content (descricao, dataPublicacao, categoria, diaLancamento) VALUES ";
-    qry += "($1, $2, $3, $4)";    
+    let qry = "INSERT INTO content (descricao, dataPublicacao, categoria, diaLancamento) ";
+    //qry += "VALUES ($1, $2, $3, $4)";    
+     qry += ` VALUES ('${req.body.descricao}', '${req.body.dataPublicacao}', ${req.body.categoria}, '${req.body.diaLancamento}');`
     pool.query(qry, [req.body.descricao, req.body.dataPublicacao, req.body.categoria, req.body.diaLancamento], (err, dbres) => {
         if (err) {
             res.status(500).send(err);        
