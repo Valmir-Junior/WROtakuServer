@@ -19,9 +19,9 @@ app.route('/reset').get((req, res)=>{
     let query = "DROP TABLE IF EXISTS content;";
     query+= "CREATE TABLE content (";
     query+= "	descricao varchar(100),";
-    query+= "	dataPublicacao varchar(11),";
-    query+= "	diaLancamento varchar(20),";
-    query+= "	categoria varchar(30));";    
+    query+= "	dataPublicacao varchar(100),";
+    query+= "	diaLancamento varchar(100),";
+    query+= "	categoria varchar(100));";    
 
 
     query+= "DROP TABLE IF EXISTS app_user;";
