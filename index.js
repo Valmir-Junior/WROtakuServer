@@ -18,7 +18,6 @@ app.set('port', port);
 app.route('/reset').get((req, res)=>{
     let query = "DROP TABLE IF EXISTS content;";
     query+= "CREATE TABLE content (";
-    query+= "	id serial primary key not null,";
     query+= "	descricao varchar(100),";
     query+= "	dataPublicacao timestamp,";
     query+= "	diaLancamento int,";
@@ -27,7 +26,6 @@ app.route('/reset').get((req, res)=>{
 
     query+= "DROP TABLE IF EXISTS app_user;";
     query+= "CREATE TABLE app_user (";
-    query+= "	id serial primary key not null,";
     query+= "	nome varchar(100),";
     query+= "	email varchar(100),";
     query+= "	password varchar(100));";
