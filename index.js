@@ -4,7 +4,7 @@ const port = process.env.PORT || 80;
 
 const pool = new pg.Pool(
     {
-        connectionString: "postgres://dquedxdbsxdhym:e99dcf9c2f6091dea9886445b412626741aff25aa7e40efead8a249eee09dab6@ec2-18-214-140-149.compute-1.amazonaws.com:5432/d2vmab9ogj41op",
+        connectionString: "postgres://yeqwvgrjsxzfum:b72b0efde07ae4c2ad6cd310a4a36f03b41082cfc9d6cd11d9e5a404516a2e69@ec2-34-232-191-133.compute-1.amazonaws.com:5432/das1mo44ostlit",
         ssl: {
             rejectUnauthorized: false,
         }
