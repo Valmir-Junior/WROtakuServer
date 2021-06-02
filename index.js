@@ -60,7 +60,7 @@ app.route('/conteudos/listar').get((req, res)=>{
         if (err) {
             res.status(500).send(err);
         } else {
-            res.status(200).json([dbres.rows]);
+            res.status(200).json(dbres.rows);
         }
     });    
 });
