@@ -89,7 +89,7 @@ app.route('/forums/adicionar').post((req, res)=>{
     qry += " VALUES ($1, $2, $3)";    
     pool.query(qry, [req.body.nome, req.body.dataCriacao, req.body.categoria], (err, dbres) => {
         if (err) {
-            res.status(500).send(err);        
+            res.status(500).send(err);          
         } else {
             res.status(200).send('Objeto adicionado com sucesso!');
         }
@@ -110,8 +110,8 @@ app.route('/forums/listar').get((req, res)=>{
 app.route('/config/adicionar').post((req, res)=>{
     console.log('BODY:' , req.body);
     if (req.body.operation === "1"){
-        let qry = "INSERT INTO config (descricao, dataPublicacao, categoria, diaLancamento)";
-        qry += " VALUES ($1, $2, $3, $4)";
+        let qry = "INSERT INTO config (modo, ocultarConteudo, confirmarAcesso)";
+        qry += " VALUES ($1, $2, $3)";
     } else {
         let qry = "UPDATE config SET modo=$1 , ocultarConteudo=$2, confirmarAcesso=$3;";
     }   
