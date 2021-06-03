@@ -30,20 +30,21 @@ app.route('/reset').get((req, res)=>{
     query+= "	password varchar(100));";
     query+= "INSERT INTO app_user (nome, email, password) VALUES ('CLIENTE1', 'teste@teste.com', '1212');";
     
+    consele.log('criou user');
     query+= "DROP TABLE IF EXISTS forum;";
-    query+= "CREATE TABLE forum {";
+    query+= "CREATE TABLE forum (";
     query+= "	nome varchar(50),";
     query+= "   dataCriacao varchar(20),";
     query+= "   categoria varchar(5));";
 
     query+= "DROP TABLE IF EXISTS config;";
-    query+= "CREATE TABLE config {";
+    query+= "CREATE TABLE config (";
     query+= "	modo varchar(10),";
     query+= "   ocultarConteudo varchar(3),";
     query+= "   confirmarAcesso varchar(3));";
 
     query+= "DROP TABLE IF EXISTS forumchat;";
-    query+= "CREATE TABLE forumchat {";
+    query+= "CREATE TABLE forumchat (";
     query+= "	mensagem varchar(100),";
     query+= "   typeMessage varchar(1),";
     query+= "   origem varchar(50));";
