@@ -30,7 +30,7 @@ app.route('/reset').get((req, res)=>{
     query+= "	password varchar(100));";
     query+= "INSERT INTO app_user (nome, email, password) VALUES ('CLIENTE1', 'teste@teste.com', '1212');";
     
-    consele.log('criou user');
+    
     query+= "DROP TABLE IF EXISTS forum;";
     query+= "CREATE TABLE forum (";
     query+= "	nome varchar(50),";
