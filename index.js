@@ -109,12 +109,14 @@ app.route('/forums/listar').get((req, res)=>{
 
 app.route('/config/adicionar').post((req, res)=>{
     console.log('BODY:' , req.body);
+    let qry = "";
     if (req.body.operation === "1"){
-        let qry = "INSERT INTO config (modo, ocultarConteudo, confirmarAcesso)";
+        qry = "INSERT INTO config (modo, ocultarConteudo, confirmarAcesso)";
         qry += " VALUES ($1, $2, $3)";
     } else {
-        let qry = "UPDATE config SET modo=$1 , ocultarConteudo=$2, confirmarAcesso=$3;";
-    }   
+        qry = "UPDATE config SET modo=$1 , ocultarConteudo=$2, confirmarAcesso=$3;";
+    }
+
     pool.query(qry, [req.body.modo, req.body.ocultarConteudo, req.body.confirmarAcesso], (err, dbres) => {
         if (err) {
             res.status(500).send(err);        
