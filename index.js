@@ -1,15 +1,37 @@
 const express = require('express');
 const pg = require('pg');
-const port = process.env.PORT || 80;
+const config = require('config');
+const port = process.env.PORT || config.get('server.port');;
+const dbUrl = process.env.DATABASE_URL || config.get('db.url');
+const secret = process.env.JWT_SECRET || config.get('jwt.secret');
 
 const pool = new pg.Pool(
     {
-        connectionString: "postgres://yeqwvgrjsxzfum:b72b0efde07ae4c2ad6cd310a4a36f03b41082cfc9d6cd11d9e5a404516a2e69@ec2-34-232-191-133.compute-1.amazonaws.com:5432/das1mo44ostlit",
+        connectionString: dbUrl,
         ssl: {
             rejectUnauthorized: false,
         }
     }
 );
+
+const filtroJwt = (req, res, proximo) => { 
+    console.log("Headers ==>", req.headers);
+    // console.log(`Autorization ==> ${req.headers.authorization.substring(0, 6)}`);
+    if (req.headers.authorization 
+        && req.headers.authorization.substring(0, 6) === "Bearer") { 
+        const token = req.headers.authorization.substring(7);
+        console.log("Token ==> ", token);
+        jwt.verify(token, secret, (err, info) => { 
+            if (err) { 
+                res.status(403).send("Token inválido");
+            } else { 
+                proximo();
+            }
+        });
+    } else { 
+        res.status(403).send("É necessário um token para acessar este recurso")
+    }
+}
 
 const app = express();
 app.use(express.json());
@@ -161,7 +183,7 @@ app.route('/forum_chat/listar').get((req, res)=>{
     });    
 });
 
-app.route('/login').get((req, res)=>{
+app.route('/login').post((req, res)=>{
     console.log('Body', req.body);
     let qry = "SELECT * FROM app_user where email=$1 and password=$2;";    
     pool.query(qry, [req.body.email, req.body.password], (err, dbres)=>{
