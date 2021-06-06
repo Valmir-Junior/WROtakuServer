@@ -1,6 +1,7 @@
 const express = require('express');
 const pg = require('pg');
 const config = require('config');
+const jwt = require('jsonwebtoken');
 const port = process.env.PORT || config.get('server.port');;
 const dbUrl = process.env.DATABASE_URL || config.get('db.url');
 const secret = process.env.JWT_SECRET || config.get('jwt.secret');
@@ -16,7 +17,6 @@ const pool = new pg.Pool(
 
 const filtroJwt = (req, res, proximo) => { 
     console.log("Headers ==>", req.headers);
-    // console.log(`Autorization ==> ${req.headers.authorization.substring(0, 6)}`);
     if (req.headers.authorization 
         && req.headers.authorization.substring(0, 6) === "Bearer") { 
         const token = req.headers.authorization.substring(7);
@@ -81,7 +81,7 @@ app.route('/reset').get((req, res)=>{
     });    
 });
 
-app.route('/conteudos/adicionar').post((req, res)=>{
+app.route('/conteudos/adicionar').post(filtroJwt, (req, res)=>{
     console.log('BODY:' , req.body);
     let qry = "INSERT INTO content (descricao, dataPublicacao, categoria, diaLancamento)";
     qry += " VALUES ($1, $2, $3, $4)";    
@@ -94,7 +94,7 @@ app.route('/conteudos/adicionar').post((req, res)=>{
     });    
 });
 
-app.route('/conteudos/listar').get((req, res)=>{
+app.route('/conteudos/listar').get(filtroJwt, (req, res)=>{
     let qry = "SELECT * FROM content;";    
     pool.query(qry, (err, dbres)=>{
         if (err) {
@@ -105,7 +105,7 @@ app.route('/conteudos/listar').get((req, res)=>{
     });    
 });
 
-app.route('/forums/adicionar').post((req, res)=>{
+app.route('/forums/adicionar').post(filtroJwt, (req, res)=>{
     console.log('BODY:' , req.body);
     let qry = "INSERT INTO forum (nome, dataCriacao, categoria)";
     qry += " VALUES ($1, $2, $3)";    
@@ -118,7 +118,7 @@ app.route('/forums/adicionar').post((req, res)=>{
     });    
 });
 
-app.route('/forums/listar').get((req, res)=>{
+app.route('/forums/listar').get(filtroJwt, (req, res)=>{
     let qry = "SELECT * FROM forum;";    
     pool.query(qry, (err, dbres)=>{
         if (err) {
@@ -129,7 +129,7 @@ app.route('/forums/listar').get((req, res)=>{
     });    
 });
 
-app.route('/config/adicionar').post((req, res)=>{
+app.route('/config/adicionar').post(filtroJwt, (req, res)=>{
     console.log('BODY:' , req.body);
     let qry = "";
     if (req.body.operation === "1"){
@@ -148,7 +148,7 @@ app.route('/config/adicionar').post((req, res)=>{
     });    
 });
 
-app.route('/config/buscar').get((req, res)=>{
+app.route('/config/buscar').get(filtroJwt, (req, res)=>{
     let qry = "SELECT * FROM config;";    
     pool.query(qry, (err, dbres)=>{
         if (err) {
@@ -159,7 +159,7 @@ app.route('/config/buscar').get((req, res)=>{
     });    
 });
 
-app.route('/forum_chat/adicionar').post((req, res)=>{
+app.route('/forum_chat/adicionar').post(filtroJwt, (req, res)=>{
     console.log('BODY:' , req.body);
     let qry = "INSERT INTO forumchat (mensagem, typeMessage, origem)";
     qry += " VALUES ($1, $2, $3)";    
@@ -172,7 +172,7 @@ app.route('/forum_chat/adicionar').post((req, res)=>{
     });    
 });
 
-app.route('/forum_chat/listar').get((req, res)=>{
+app.route('/forum_chat/listar').get(filtroJwt, (req, res)=>{
     let qry = "SELECT * FROM forumchat;";    
     pool.query(qry, (err, dbres)=>{
         if (err) {
@@ -192,9 +192,11 @@ app.route('/login').post((req, res)=>{
         } else {
             if (dbres.rowCount > 0) {
                 const row = dbres.rows[0];
-                const responseObj = {
+                const payload = {
                     nomeUsuario: row.nome
                 };
+                const token = jwt.sign(payload, secret);
+                const responseObj = {token}
                 res.status(200).json(responseObj);
             } else {
                 res.status(401).send('Usuário ou senha não encontrados');
